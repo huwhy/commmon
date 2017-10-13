@@ -74,7 +74,6 @@ public class BasicRefererConfigBean extends BasicRefererInterfaceConfig implemen
         }
     }
 
-
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;

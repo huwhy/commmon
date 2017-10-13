@@ -18,9 +18,8 @@ package cn.huwhy.bees.config;
 
 
 /**
- * 
  * Base config for service and referer config.
- * 
+ *
  * @author fishermen
  * @version V1.0 created at: 2013-6-5
  */
@@ -28,8 +27,13 @@ package cn.huwhy.bees.config;
 public class BasicRefererInterfaceConfig extends AbstractRefererConfig {
 
     private static final long serialVersionUID = -418351068816874749L;
-    /** 是否默认配置 */
+    /**
+     * 是否默认配置
+     */
     private Boolean isDefault;
+
+    // 点对点直连服务提供地址
+    private String directUrl;
 
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
@@ -39,6 +43,11 @@ public class BasicRefererInterfaceConfig extends AbstractRefererConfig {
         return isDefault;
     }
 
+    public String getDirectUrl() {
+        return directUrl;
+    }
 
-
+    public void setDirectUrl(String directUrl) {
+        this.directUrl = directUrl;
+    }
 }

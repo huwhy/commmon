@@ -184,6 +184,9 @@ public class RefererConfig<T> extends AbstractRefererConfig {
 
     public void setBasicReferer(BasicRefererInterfaceConfig basicReferer) {
         this.basicReferer = basicReferer;
+        if (StringTools.notBlank(basicReferer.getDirectUrl())) {
+            this.directUrl = basicReferer.getDirectUrl();
+        }
     }
 
     public ClusterSupport<T> getClusterSupport() {
