@@ -21,8 +21,12 @@ import cn.huwhy.bees.util.LoggerUtil;
 import cn.huwhy.bees.util.BeesFrameworkUtil;
 import cn.huwhy.bees.util.ReflectUtil;
 import cn.huwhy.bees.util.RequestIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RefererInvocationHandler<T> implements InvocationHandler {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<Cluster<T>> clusters;
     private Class<T>         clz;
@@ -82,6 +86,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
                 response = cluster.call(request);
                 return response.getValue();
             } catch (RuntimeException e) {
+                logger.error("", e);
                 if (ExceptionUtil.isBizException(e)) {
                     Throwable t = e.getCause();
                     // 只抛出Exception，防止抛出远程的Error
