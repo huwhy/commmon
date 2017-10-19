@@ -57,6 +57,7 @@ public class DefaultProvider<T> extends AbstractProvider<T> {
             Object value = method.invoke(proxyImpl, request.getArguments());
             response.setValue(value);
         } catch (Exception e) {
+            e.printStackTrace();
             LoggerUtil.error(e.getMessage(), e);
             if (e.getCause() != null) {
                 LoggerUtil.error("Exception caught when method invoke: " + e.getCause());
@@ -65,6 +66,7 @@ public class DefaultProvider<T> extends AbstractProvider<T> {
                 response.setException(new BeesBizException(e.getMessage()));
             }
         } catch (Throwable t) {
+            t.printStackTrace();
             // 如果服务发生Error，将Error转化为Exception，防止拖垮调用方
             if (t.getCause() != null) {
                 response.setException(new BeesServiceException("provider has encountered a fatal error!", t.getCause()));

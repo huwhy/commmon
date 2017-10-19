@@ -94,10 +94,11 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
                     if (t != null && t instanceof Exception) {
                         throw t;
                     } else {
-                        String msg =
-                                t == null ? "biz exception cause is null" : ("biz exception cause is throwable error:" + t.getClass()
-                                        + ", errmsg:" + t.getMessage());
-                        throw new BeesServiceException(msg, BeesErrorMsgConstant.SERVICE_DEFAULT_ERROR);
+                        throw new BeesServiceException(e);
+//                        String msg =
+//                                t == null ? "biz exception cause is null" : ("biz exception cause is throwable error:" + t.getClass()
+//                                        + ", errmsg:" + t.getMessage());
+//                        throw new BeesServiceException(msg, BeesErrorMsgConstant.SERVICE_DEFAULT_ERROR);
                     }
                 } else if (!throwException) {
                     LoggerUtil.warn("RefererInvocationHandler invoke false, so return default value: uri=" + cluster.getUrl().getUri()
