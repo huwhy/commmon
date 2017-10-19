@@ -105,11 +105,11 @@ public class LoggerUtil {
     }
 
     public static void accessStatsLog(String msg) {
-        logService.accessStatsLog(msg);
+//        logService.accessStatsLog(msg);
     }
 
     public static void accessStatsLog(String format, Object... argArray) {
-        logService.accessStatsLog(format, argArray);
+//        logService.accessStatsLog(format, argArray);
     }
 
     public static void accessProfileLog(String format, Object... argArray) {

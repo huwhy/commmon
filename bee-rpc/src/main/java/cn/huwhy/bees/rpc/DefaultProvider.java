@@ -61,9 +61,10 @@ public class DefaultProvider<T> extends AbstractProvider<T> {
             LoggerUtil.error(e.getMessage(), e);
             if (e.getCause() != null) {
                 LoggerUtil.error("Exception caught when method invoke: " + e.getCause());
+
                 response.setException(new BeesBizException(e));
             } else {
-                response.setException(new BeesBizException(e.getMessage()));
+                response.setException(new BeesBizException(e));
             }
         } catch (Throwable t) {
             t.printStackTrace();
