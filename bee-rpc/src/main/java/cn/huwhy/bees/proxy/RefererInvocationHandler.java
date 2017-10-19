@@ -86,6 +86,7 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
                 response = cluster.call(request);
                 return response.getValue();
             } catch (RuntimeException e) {
+                e.printStackTrace();
                 logger.error("", e);
                 if (ExceptionUtil.isBizException(e)) {
                     Throwable t = e.getCause();
