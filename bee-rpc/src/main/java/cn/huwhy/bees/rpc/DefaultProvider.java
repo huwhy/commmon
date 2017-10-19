@@ -57,12 +57,10 @@ public class DefaultProvider<T> extends AbstractProvider<T> {
             Object value = method.invoke(proxyImpl, request.getArguments());
             response.setValue(value);
         } catch (Exception e) {
-            e.printStackTrace();
             LoggerUtil.error(e.getMessage(), e);
             if (e.getCause() != null) {
                 LoggerUtil.error("Exception caught when method invoke: " + e.getCause());
-
-                response.setException(new BeesBizException(e));
+                response.setException(new BeesBizException(e.getMessage()));
             } else {
                 response.setException(new BeesBizException(e));
             }

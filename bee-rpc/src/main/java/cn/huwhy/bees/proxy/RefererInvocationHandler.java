@@ -86,19 +86,16 @@ public class RefererInvocationHandler<T> implements InvocationHandler {
                 response = cluster.call(request);
                 return response.getValue();
             } catch (RuntimeException e) {
-                e.printStackTrace();
-                logger.error("", e);
                 if (ExceptionUtil.isBizException(e)) {
                     Throwable t = e.getCause();
                     // 只抛出Exception，防止抛出远程的Error
                     if (t != null && t instanceof Exception) {
                         throw t;
                     } else {
-                        throw new BeesServiceException(e);
-//                        String msg =
-//                                t == null ? "biz exception cause is null" : ("biz exception cause is throwable error:" + t.getClass()
-//                                        + ", errmsg:" + t.getMessage());
-//                        throw new BeesServiceException(msg, BeesErrorMsgConstant.SERVICE_DEFAULT_ERROR);
+                        String msg =
+                                t == null ? "biz exception cause is null" : ("biz exception cause is throwable error:" + t.getClass()
+                                        + ", errmsg:" + t.getMessage());
+                        throw new BeesServiceException(msg, BeesErrorMsgConstant.SERVICE_DEFAULT_ERROR);
                     }
                 } else if (!throwException) {
                     LoggerUtil.warn("RefererInvocationHandler invoke false, so return default value: uri=" + cluster.getUrl().getUri()
