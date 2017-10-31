@@ -24,8 +24,7 @@ public abstract class AbstractCache<T, PK> {
 
     JedisFactory jedisFactory;
 
-    private Function<T, String>  entityFunc = t -> Integer.toString(t.hashCode());
-    private Function<PK, String> keyFunc    = t -> Integer.toString(t.hashCode());
+    private Function<PK, String> keyFunc = t -> Integer.toString(t.hashCode());
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -37,10 +36,6 @@ public abstract class AbstractCache<T, PK> {
 
     public void setJedisFactory(JedisFactory jedisFactory) {
         this.jedisFactory = jedisFactory;
-    }
-
-    public void setEntityFunc(Function<T, String> entityFunc) {
-        this.entityFunc = entityFunc;
     }
 
     public void setKeyFunc(Function<PK, String> keyFunc) {
@@ -71,11 +66,11 @@ public abstract class AbstractCache<T, PK> {
         }
     }
 
-    public void put(T entity) {
+    public void put(T entity, PK pk) {
         if (entity == null)
             return;
         try {
-            String key = entityFunc.apply(entity);
+            String key = key(pk);
             String value = JsonUtil.toJson(entity);
             logger.debug("cache put key:{}, value:{}", key, value);
             jedisFactory.call(jedis -> {
