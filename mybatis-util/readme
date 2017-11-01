@@ -1,0 +1,30 @@
+nextId方法(自定义序列生成)  底层支持：
+
+    CREATE TABLE `sequence` (
+      `name` varchar(50) NOT NULL,
+      `current_value` bigint(20) NOT NULL,
+      `increment` int(11) NOT NULL DEFAULT '1'
+    ) ENGINE=InnoDB COMMENT='序列表，命名s_[table_name]';
+    delimiter //
+    CREATE DEFINER=`root`@`%` FUNCTION `next_val`(`seq_name` varchar(100)) RETURNS bigint(20)
+        SQL SECURITY INVOKER
+    BEGIN
+        DECLARE cur_val bigint(20);
+        SELECT
+          current_value + increment INTO cur_val
+        FROM
+          sequence
+        WHERE
+          `name` = seq_name for update;
+
+        IF cur_val IS NOT NULL THEN
+          UPDATE sequence SET current_value = cur_val WHERE `name` = seq_name;
+        ELSE
+          insert into sequence(`name`, current_value, increment) values (seq_name, 1, 1);
+          select 1 into cur_val;
+        END IF;
+
+        RETURN cur_val;
+      END
+       //
+
