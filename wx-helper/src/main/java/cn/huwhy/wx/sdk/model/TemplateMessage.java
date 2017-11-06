@@ -52,6 +52,9 @@ public class TemplateMessage {
     public void addData(String key, String value, String color) {
         this.data.put(key, new TemplateMessageItem(value, color));
     }
+    public void addData(String key, String value) {
+        this.data.put(key, new TemplateMessageItem(value));
+    }
 
     public static class TemplateMessageItem {
         private String value;
