@@ -52,6 +52,9 @@ public class ResultTypeInterceptor implements Interceptor {
 
     private Object queryList(Invocation invocation, ResultSet rs, MappedStatement mappedStatement) throws InvocationTargetException, IllegalAccessException, SQLException {
         Object result;
+        if (mappedStatement.getResultMaps().size() == 0) {
+            return invocation.proceed();
+        }
         Class mappedClass = mappedStatement.getResultMaps().get(0).getType();
         if (mappedClass.getPackage().getName().equals("java.lang")
                 || mappedClass.getPackage().getName().equals("java.util")
