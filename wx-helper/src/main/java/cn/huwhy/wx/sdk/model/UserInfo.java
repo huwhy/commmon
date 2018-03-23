@@ -2,6 +2,8 @@ package cn.huwhy.wx.sdk.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.util.List;
+
 public class UserInfo {
     private int    subscribe;
     @JSONField(name = "openid")
@@ -23,6 +25,14 @@ public class UserInfo {
     private String remark;
     @JSONField(name = "groupid")
     private int    groupid;
+    @JSONField(name = "tagid_list")
+    private List<Long> tagIds;
+    @JSONField(name = "subscribe_scene")
+    private String subscribeScene;
+    @JSONField(name = "qr_scene")
+    private String qrScene;
+    @JSONField(name = "qr_scene_str")
+    private String qrSceneStr;
 
     public int getSubscribe() {
         return subscribe;
@@ -126,5 +136,37 @@ public class UserInfo {
 
     public void setGroupid(int groupid) {
         this.groupid = groupid;
+    }
+
+    public List<Long> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public String getSubscribeScene() {
+        return subscribeScene;
+    }
+
+    public void setSubscribeScene(String subscribeScene) {
+        this.subscribeScene = subscribeScene;
+    }
+
+    public String getQrScene() {
+        return qrScene;
+    }
+
+    public void setQrScene(String qrScene) {
+        this.qrScene = qrScene;
+    }
+
+    public String getQrSceneStr() {
+        return qrSceneStr;
+    }
+
+    public void setQrSceneStr(String qrSceneStr) {
+        this.qrSceneStr = qrSceneStr;
     }
 }
