@@ -39,10 +39,13 @@ public class UserApi {
     }
 
     public static void main(String[] args) throws IOException {
-        String accessToken = "t6ejPpm3I90EqmsuKnI-jERCfLUdtz_wukBeh77sdvYSCTWyjFkAc_YL3SR2nA0ZQSqQw_AbV-7dRvzFdcBHdE6FrCd1EedRmZXkmcyhJFQCqW8yoMpWShT1inJktuO1KKJfACAXXW";
+        String accessToken = "7__FSWIcxsusR4oMCAXbz_qgBV53XWgSa3cF3KJvTi-DsyFudnyJIDRrVUfSQ1gbVQXR-qU_ak0YuhniSY56qwh0c9peZEyvXO9Y5Zmpx7X9S0TDJx8D1LgwzjsVACPPgAIAKXX";
 
-        UserList userInfo = listUser(accessToken, "");
-        System.out.println(toJSONString(userInfo));
+//        UserList userInfo = listUser(accessToken, "");
+//        System.out.println(toJSONString(userInfo));
+
+        UserInfo userInfo1 = getUserInfo(accessToken, "o4FxKuCStiQwcUXrPSLxLmBtUc3s");
+        System.out.println(userInfo1);
     }
 
     static class OpenIdParam {

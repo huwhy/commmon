@@ -7,7 +7,7 @@ public class AccessToken {
     @JSONField(name = "access_token")
     private String accessToken;
     @JSONField(name = "expires_in")
-    private Long expiresIn;
+    private int expiresIn;
 
     public String getAccessToken() {
         return accessToken;
@@ -17,11 +17,11 @@ public class AccessToken {
         this.accessToken = accessToken;
     }
 
-    public Long getExpiresIn() {
+    public int getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(Long expiresIn) {
+    public void setExpiresIn(int expiresIn) {
         this.expiresIn = expiresIn;
     }
 

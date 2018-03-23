@@ -20,7 +20,7 @@ public abstract class AccessTokenApi {
     }
 
     public static void main(String[] args) {
-        AccessToken token = getAppAccessToken("wx8f7c6b54aac99143", "0aab85a2ae857d52c28141db2d4139b0");
+        AccessToken token = getAppAccessToken("wxb4be7fb7ac42baf3", "7a2e23370e79aa7dd3ce15d5d448c12a");
         System.out.println(token);
     }
 

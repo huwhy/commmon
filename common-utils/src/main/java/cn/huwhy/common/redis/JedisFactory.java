@@ -8,13 +8,13 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class JedisFactory {
 
-    private int maxActive = 1024;
+    private int maxTotal = 1024;
 
     private int maxIdle = 64;
 
-    private long maxWaitMillis = 6000;
+    private int minIdle;
 
-    private JedisPool pool;
+    private long maxWaitMillis = 6000;
 
     private String host;
 
@@ -27,8 +27,10 @@ public class JedisFactory {
 
     private Integer database;
 
-    public void setMaxActive(int maxActive) {
-        this.maxActive = maxActive;
+    private JedisPool pool;
+
+    public void setMaxTotal(int maxTotal) {
+        this.maxTotal = maxTotal;
     }
 
     public void setMaxIdle(int maxIdle) {
@@ -61,16 +63,19 @@ public class JedisFactory {
 
     public void init() {
         JedisPoolConfig config = new JedisPoolConfig();
-        if (maxActive > 0) {
-            config.setMaxTotal(maxActive);
+        if (maxTotal > 0) {
+            config.setMaxTotal(maxTotal);
         }
         if (maxIdle > 0) {
             config.setMaxIdle(maxIdle);
         }
+        if (minIdle > 0) {
+            config.setMinIdle(minIdle);
+        }
         if (maxWaitMillis > 0) {
             config.setMaxWaitMillis(maxWaitMillis);
         }
-        config.setTestOnBorrow(true);
+        config.setTestOnBorrow(false);
         config.setTestOnReturn(true);
         config.setTestWhileIdle(true);
         config.setTimeBetweenEvictionRunsMillis(30000);

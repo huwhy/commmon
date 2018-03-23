@@ -264,8 +264,7 @@ public class WXBizMsgCrypt {
 		}
 
 		// 解密
-		String result = decrypt(encrypt[1].toString());
-		return result;
+		return decrypt(encrypt[1].toString());
 	}
 
 	/**
