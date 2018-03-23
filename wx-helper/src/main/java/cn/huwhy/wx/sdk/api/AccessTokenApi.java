@@ -9,6 +9,7 @@ import cn.huwhy.wx.sdk.model.Result;
 public abstract class AccessTokenApi {
 
     private static final String APP_TAKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
+    private static final String USER_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
 
     public static AccessToken getAppAccessToken(String appId, String appSecret){
         Map<String, String> params = new HashMap<>();
@@ -16,6 +17,16 @@ public abstract class AccessTokenApi {
         params.put("secret", appSecret);
         params.put("grant_type", "client_credential");
         Result result = HttpClientUtil.get(APP_TAKEN_URL, params, AccessToken.class);
+        return result.isOk() ? (AccessToken) result.getData() : null;
+    }
+
+    public static AccessToken getUserAccessToken(String appId, String appSecret, String code) {
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", appId);
+        params.put("secret", appSecret);
+        params.put("code", code);
+        params.put("grant_type", "authorization_code");
+        Result result = HttpClientUtil.get(USER_TOKEN_URL, params, AccessToken.class);
         return result.isOk() ? (AccessToken) result.getData() : null;
     }
 

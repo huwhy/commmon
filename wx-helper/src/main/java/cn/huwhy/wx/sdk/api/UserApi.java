@@ -11,6 +11,7 @@ import cn.huwhy.wx.sdk.model.UserInfo;
 import cn.huwhy.wx.sdk.model.UserInfoList;
 import cn.huwhy.wx.sdk.model.UserList;
 
+import static cn.huwhy.wx.sdk.api.HttpClientUtil.get;
 import static com.alibaba.fastjson.JSON.toJSONString;
 import static com.google.common.collect.ImmutableMap.of;
 
@@ -18,9 +19,15 @@ public class UserApi {
 
     private static String INFO_API = "https://api.weixin.qq.com/cgi-bin/user/info";
     private static String LIST_INFO_API = "https://api.weixin.qq.com/cgi-bin/user/get";
+    private static String SNS_INFO_API = "https://api.weixin.qq.com/sns/userinfo";
 
     public static UserInfo getUserInfo(String accessToken, String openId) {
-        Result result = HttpClientUtil.get(INFO_API, of("access_token", accessToken, "openid", openId), UserInfo.class);
+        Result result = get(INFO_API, of("access_token", accessToken, "openid", openId), UserInfo.class);
+        return result.isOk() ? (UserInfo) result.getData() : null;
+    }
+
+    public static UserInfo getSnsUserInfo(String accessToken, String openId) {
+        Result result = get(SNS_INFO_API, of("access_token", accessToken, "openid", openId, "lang", "zh_CN"), UserInfo.class);
         return result.isOk() ? (UserInfo) result.getData() : null;
     }
 
@@ -34,7 +41,7 @@ public class UserApi {
     }
 
     public static UserList listUser(String accessToken, String nextOpenId) throws IOException {
-        Result result = HttpClientUtil.get(LIST_INFO_API, of("access_token", accessToken, "next_openid", nextOpenId), UserList.class);
+        Result result = get(LIST_INFO_API, of("access_token", accessToken, "next_openid", nextOpenId), UserList.class);
         return result.isOk() ? (UserList) result.getData() : null;
     }
 
