@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import cn.huwhy.wx.sdk.model.WxPayResult;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,76 @@ public class WxCryptUtil {
         String sign = DigestUtils.md5Hex(toSign.toString())
                 .toUpperCase();
         return sign;
+    }
+
+    public static WxPayResult transform(String xml) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            StringReader sr = new StringReader(xml);
+            InputSource is = new InputSource(sr);
+            Document document = db.parse(is);
+            Element root = document.getDocumentElement();
+            WxPayResult result = new WxPayResult();
+            NodeList returnCodeNode = root.getElementsByTagName("return_code");
+            result.setReturn_code(returnCodeNode.item(0).getTextContent().trim());
+            NodeList returnMsgNode = root.getElementsByTagName("return_msg");
+            result.setReturn_msg(returnMsgNode.item(0).getTextContent().trim());
+            NodeList appIdNode = root.getElementsByTagName("appid");
+            result.setAppid(appIdNode.item(0).getTextContent().trim());
+            NodeList mchId = root.getElementsByTagName("mch_id");
+            result.setMch_id(mchId.item(0).getTextContent().trim());
+            NodeList deviceInfo = root.getElementsByTagName("device_info");
+            result.setDevice_info(deviceInfo.item(0).getTextContent().trim());
+            NodeList nonceStr = root.getElementsByTagName("nonce_str");
+            result.setNonce_str(nonceStr.item(0).getTextContent().trim());
+            NodeList sign = root.getElementsByTagName("sign");
+            result.setSign(sign.item(0).getTextContent().trim());
+            NodeList resultCode = root.getElementsByTagName("result_code");
+            result.setResult_code(resultCode.item(0).getTextContent().trim());
+            NodeList errCode = root.getElementsByTagName("err_code");
+            result.setErr_code(errCode.item(0).getTextContent().trim());
+            NodeList err_code_des = root.getElementsByTagName("err_code_des");
+            result.setErr_code_des(err_code_des.item(0).getTextContent().trim());
+            NodeList openId = root.getElementsByTagName("openid");
+            result.setOpenid(openId.item(0).getTextContent().trim());
+            NodeList isSubscribe = root.getElementsByTagName("is_subscribe");
+            result.setIs_subscribe(isSubscribe.item(0).getTextContent().trim());
+            NodeList tradeType = root.getElementsByTagName("trade_type");
+            result.setTrade_type(tradeType.item(0).getTextContent().trim());
+            NodeList bankType = root.getElementsByTagName("bank_type");
+            result.setBank_type(bankType.item(0).getTextContent().trim());
+            NodeList totalFee = root.getElementsByTagName("total_fee");
+            result.setTotal_fee(totalFee.item(0).getTextContent().trim());
+            NodeList feeType = root.getElementsByTagName("fee_type");
+            result.setFee_type(feeType.item(0).getTextContent().trim());
+            NodeList cashFee = root.getElementsByTagName("cash_fee");
+            result.setCash_fee(cashFee.item(0).getTextContent().trim());
+            NodeList cashFeeType = root.getElementsByTagName("cash_fee_type");
+            result.setCash_fee_type(cashFeeType.item(0).getTextContent().trim());
+            NodeList couponFee = root.getElementsByTagName("coupon_fee");
+            result.setCoupon_fee(couponFee.item(0).getTextContent().trim());
+            NodeList couponCount = root.getElementsByTagName("coupon_count");
+            result.setCoupon_count(couponCount.item(0).getTextContent().trim());
+            NodeList couponBatchId_$n = root.getElementsByTagName("coupon_batch_id_$n");
+            result.setCoupon_batch_id_$n(couponBatchId_$n.item(0).getTextContent().trim());
+            NodeList couponId_$n = root.getElementsByTagName("coupon_id_$n");
+            result.setCoupon_id_$n(couponId_$n.item(0).getTextContent().trim());
+            NodeList couponFee_$n = root.getElementsByTagName("coupon_fee_$n");
+            result.setCoupon_fee_$n(couponFee_$n.item(0).getTextContent().trim());
+            NodeList transactionId = root.getElementsByTagName("transaction_id");
+            result.setTransaction_id(transactionId.item(0).getTextContent().trim());
+            NodeList outTradeNo = root.getElementsByTagName("out_trade_no");
+            result.setOut_trade_no(outTradeNo.item(0).getTextContent().trim());
+            NodeList attach = root.getElementsByTagName("attach");
+            result.setAttach(attach.item(0).getTextContent().trim());
+            NodeList timeEnd = root.getElementsByTagName("time_end");
+            result.setTime_end(timeEnd.item(0).getTextContent().trim());
+            return result;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            logger.error("", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public static Command transform(WXBizMsgCrypt crypt, String signature, String timestamp, String nonce, String postXML) {
