@@ -247,4 +247,9 @@ public class WxPayResult implements Serializable{
     public void setTime_end(String time_end) {
         this.time_end = time_end;
     }
+
+    public boolean ok() {
+        return "SUCCESS".equals(result_code) && "SUCCESS".equals(return_code);
+    }
+
 }
