@@ -255,7 +255,7 @@ public class WXBizMsgCrypt {
 
 		// 验证安全签名
 		String signature = SHA1.gen(token, timeStamp, nonce);
-		logger.debug("decryptMsg-sign: {}", signature);
+		logger.debug("decryptMsg-sign: {} - {}}", signature, msgSignature);
 		// 和URL中的签名比较是否相等
 		// System.out.println("第三方收到URL中的签名：" + msg_sign);
 		// System.out.println("第三方校验签名：" + signature);
