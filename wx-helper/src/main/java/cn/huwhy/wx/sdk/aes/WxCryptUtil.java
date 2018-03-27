@@ -128,9 +128,9 @@ public class WxCryptUtil {
         }
     }
 
-    public static Command transform(WXBizMsgCrypt crypt, String signature, String timestamp, String nonce, String postXML) {
+    public static Command transform(MpConfig config, String signature, String timestamp, String nonce, String postXML) {
         try {
-            String ss = crypt.decryptMsg(signature, timestamp, nonce, postXML);
+            String ss = WXBizMsgCrypt.decryptMsg(config, signature, timestamp, nonce, postXML);
             logger.info("decrypt msg : " + ss);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -224,15 +224,6 @@ public class WxCryptUtil {
             return command;
 
         } catch (IOException | ParserConfigurationException | AesException | SAXException | NoSuchAlgorithmException e) {
-            logger.error("", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String encryptMsg(WXBizMsgCrypt crypt, String replyMsg, String timestamp, String nonce) {
-        try {
-            return crypt.encryptMsg(replyMsg, timestamp, nonce);
-        } catch (Exception e) {
             logger.error("", e);
             throw new RuntimeException(e);
         }

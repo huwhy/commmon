@@ -1,6 +1,7 @@
 package cn.huwhy.wx.sdk.aes;
 
 import cn.huwhy.wx.sdk.model.AccessToken;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.net.ssl.SSLContext;
 import java.io.File;
@@ -13,7 +14,7 @@ public class MpConfig {
     protected volatile String partnerKey;
     protected volatile String token;
     protected volatile String accessToken;
-    protected volatile String aesKey;
+    protected volatile byte[] aesKey;
     protected volatile long expiresTime;
 
     protected volatile String oauth2redirectUri;
@@ -113,11 +114,16 @@ public class MpConfig {
         this.token = token;
     }
 
-    public String getAesKey() {
+    public byte[] getAesKey() {
         return aesKey;
     }
 
-    public void setAesKey(String aesKey) {
+    public void setAesKey2(String aesKey) {
+        Base64 base64 = new Base64();
+        this.aesKey = Base64.decodeBase64(aesKey + "=");
+    }
+
+    public void setAesKey(byte[] aesKey) {
         this.aesKey = aesKey;
     }
 

@@ -42,33 +42,12 @@ import org.slf4j.LoggerFactory;
  * </ol>
  */
 public class WXBizMsgCrypt {
-	private Logger logger = LoggerFactory.getLogger(WXBizMsgCrypt.class);
-	static Charset CHARSET = Charset.forName("utf-8");
-	Base64 base64 = new Base64();
-	byte[] aesKey;
-	String token;
-	String appId;
-
-	/**
-	 * 构造函数
-	 * @param token 公众平台上，开发者设置的token
-	 * @param encodingAesKey 公众平台上，开发者设置的EncodingAESKey
-	 * @param appId 公众平台appid
-	 * 
-	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
-	 */
-	public WXBizMsgCrypt(String token, String encodingAesKey, String appId) throws AesException {
-		if (encodingAesKey.length() != 43) {
-			throw new AesException(AesException.IllegalAesKey);
-		}
-
-		this.token = token;
-		this.appId = appId;
-		aesKey = Base64.decodeBase64(encodingAesKey + "=");
-	}
+	private static Logger logger = LoggerFactory.getLogger(WXBizMsgCrypt.class);
+	private static Charset CHARSET = Charset.forName("utf-8");
+	private static Base64 base64 = new Base64();
 
 	// 生成4个字节的网络字节序
-	byte[] getNetworkBytesOrder(int sourceNumber) {
+	public static byte[] getNetworkBytesOrder(int sourceNumber) {
 		byte[] orderBytes = new byte[4];
 		orderBytes[3] = (byte) (sourceNumber & 0xFF);
 		orderBytes[2] = (byte) (sourceNumber >> 8 & 0xFF);
@@ -78,7 +57,7 @@ public class WXBizMsgCrypt {
 	}
 
 	// 还原4个字节的网络字节序
-	int recoverNetworkBytesOrder(byte[] orderBytes) {
+	public static int recoverNetworkBytesOrder(byte[] orderBytes) {
 		int sourceNumber = 0;
 		for (int i = 0; i < 4; i++) {
 			sourceNumber <<= 8;
@@ -88,7 +67,7 @@ public class WXBizMsgCrypt {
 	}
 
 	// 随机生成16位字符串
-	String getRandomStr() {
+	public static String getRandomStr() {
 		String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		Random random = new Random();
 		StringBuffer sb = new StringBuffer();
@@ -106,12 +85,12 @@ public class WXBizMsgCrypt {
 	 * @return 加密后base64编码的字符串
 	 * @throws AesException aes加密失败
 	 */
-	String encrypt(String randomStr, String text) throws AesException {
+	public static String encrypt(MpConfig config, String randomStr, String text) throws AesException {
 		ByteGroup byteCollector = new ByteGroup();
 		byte[] randomStrBytes = randomStr.getBytes(CHARSET);
 		byte[] textBytes = text.getBytes(CHARSET);
 		byte[] networkBytesOrder = getNetworkBytesOrder(textBytes.length);
-		byte[] appidBytes = appId.getBytes(CHARSET);
+		byte[] appidBytes = config.getAppId().getBytes(CHARSET);
 
 		// randomStr + networkBytesOrder + text + appid
 		byteCollector.addBytes(randomStrBytes);
@@ -129,8 +108,8 @@ public class WXBizMsgCrypt {
 		try {
 			// 设置加密模式为AES的CBC模式
 			Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-			SecretKeySpec keySpec = new SecretKeySpec(aesKey, "AES");
-			IvParameterSpec iv = new IvParameterSpec(aesKey, 0, 16);
+			SecretKeySpec keySpec = new SecretKeySpec(config.getAesKey(), "AES");
+			IvParameterSpec iv = new IvParameterSpec(config.getAesKey(), 0, 16);
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
 
 			// 加密
@@ -153,13 +132,13 @@ public class WXBizMsgCrypt {
 	 * @return 解密得到的明文
 	 * @throws AesException aes解密失败
 	 */
-	public String decrypt(String text) throws AesException {
+	public static String decrypt(MpConfig config, String text) throws AesException {
 		byte[] original;
 		try {
 			// 设置解密模式为AES的CBC模式
 			Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-			SecretKeySpec key_spec = new SecretKeySpec(aesKey, "AES");
-			IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(aesKey, 0, 16));
+			SecretKeySpec key_spec = new SecretKeySpec(config.getAesKey(), "AES");
+			IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(config.getAesKey(), 0, 16));
 			cipher.init(Cipher.DECRYPT_MODE, key_spec, iv);
 
 			// 使用BASE64对密文进行解码
@@ -191,7 +170,7 @@ public class WXBizMsgCrypt {
 		}
 
 		// appid不相同的情况
-		if (!from_appid.equals(appId)) {
+		if (!from_appid.equals(config.getAppId())) {
 			throw new AesException(AesException.ValidateAppidError);
 		}
 		return xmlContent;
@@ -213,16 +192,16 @@ public class WXBizMsgCrypt {
 	 * @return 加密后的可以直接回复用户的密文，包括msg_signature, timestamp, nonce, encrypt的xml格式的字符串
 	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
 	 */
-	public String encryptMsg(String replyMsg, String timeStamp, String nonce) throws AesException, NoSuchAlgorithmException {
+	public static String encryptMsg(MpConfig config, String replyMsg, String timeStamp, String nonce) throws AesException, NoSuchAlgorithmException {
 		// 加密
-		String encrypt = encrypt(getRandomStr(), replyMsg);
+		String encrypt = encrypt(config, getRandomStr(), replyMsg);
 
 		// 生成安全签名
 		if (timeStamp == "") {
 			timeStamp = Long.toString(System.currentTimeMillis());
 		}
 
-		String signature = SHA1.genWithAmple(token, timeStamp, nonce, encrypt);
+		String signature = SHA1.genWithAmple(config.getToken(), timeStamp, nonce, encrypt);
 
 		// System.out.println("发送给平台的签名是: " + signature[1].toString());
 		// 生成发送的xml
@@ -246,7 +225,7 @@ public class WXBizMsgCrypt {
 	 * @return 解密后的原文
 	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
 	 */
-	public String decryptMsg(String msgSignature, String timeStamp, String nonce, String postData)
+	public static String decryptMsg(MpConfig config, String msgSignature, String timeStamp, String nonce, String postData)
 			throws AesException, NoSuchAlgorithmException {
 
 		// 密钥，公众账号的app secret
@@ -254,7 +233,7 @@ public class WXBizMsgCrypt {
 		Object[] encrypt = XMLParse.extract(postData);
 
 		// 验证安全签名
-		String signature = SHA1.gen(token, timeStamp, nonce);
+		String signature = SHA1.gen(config.getToken(), timeStamp, nonce);
 		logger.debug("decryptMsg-sign: {} - {}", signature, msgSignature);
 		// 和URL中的签名比较是否相等
 		// System.out.println("第三方收到URL中的签名：" + msg_sign);
@@ -264,7 +243,7 @@ public class WXBizMsgCrypt {
 		}
 
 		// 解密
-		return decrypt(encrypt[1].toString());
+		return decrypt(config, encrypt[1].toString());
 	}
 
 	/**
@@ -276,7 +255,7 @@ public class WXBizMsgCrypt {
 	 * @return 解密之后的echostr
 	 * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
 	 */
-	public boolean check(String msgSignature, String timeStamp, String nonce)
+	public static boolean check(String token, String msgSignature, String timeStamp, String nonce)
 			throws AesException, NoSuchAlgorithmException {
 		logger.debug("check: msg-sign:{}, token:{}, timestamp:{}, nonce:{}",
 				msgSignature, token, timeStamp, nonce);
