@@ -27,6 +27,7 @@ public class MpConfig {
     protected volatile String jsapiTicket;
     protected volatile long jsapiTicketExpiresTime;
     protected volatile String notifyUrl;
+    protected volatile boolean secure;
 
     /**
      * 临时文件目录
@@ -234,5 +235,13 @@ public class MpConfig {
 
     public void setNotifyUrl(String notifyUrl) {
         this.notifyUrl = notifyUrl;
+    }
+
+    public boolean getSecure() {
+        return secure;
+    }
+
+    public void setSecure(boolean secure) {
+        this.secure = secure;
     }
 }
