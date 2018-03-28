@@ -41,21 +41,20 @@ public class WxCryptUtil {
         SortedMap<String, String> sortedMap = new TreeMap<String, String>();
         sortedMap.putAll(packageParams);
 
-        List<String> keys = new ArrayList<String>(packageParams.keySet());
+        List<String> keys = new ArrayList<String>(sortedMap.keySet());
         Collections.sort(keys);
 
-        StringBuffer toSign = new StringBuffer();
+        StringBuilder toSign = new StringBuilder();
         for (String key : keys) {
-            String value = packageParams.get(key);
+            String value = sortedMap.get(key);
             if (null != value && !"".equals(value) && !"sign".equals(key)
                     && !"key".equals(key)) {
-                toSign.append(key + "=" + value + "&");
+                toSign.append(key).append("=").append(value).append("&");
             }
         }
-        toSign.append("key=" + signKey);
-        String sign = DigestUtils.md5Hex(toSign.toString())
+        toSign.append("key=").append(signKey);
+        return DigestUtils.md5Hex(toSign.toString())
                 .toUpperCase();
-        return sign;
     }
 
     public static WxPayResult transform(String xml) {
