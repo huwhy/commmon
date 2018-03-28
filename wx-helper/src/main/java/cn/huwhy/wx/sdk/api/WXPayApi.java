@@ -9,6 +9,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -25,6 +27,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class WXPayApi {
+
+    private static Logger logger = LoggerFactory.getLogger(WXPayApi.class);
 
     private static CloseableHttpClient httpClient;
 
@@ -75,30 +79,18 @@ public class WXPayApi {
             Document document = db.parse(is);
             Element root = document.getDocumentElement();
             WxOrderResult orderResult = new WxOrderResult();
-            NodeList msgTypeNode = root.getElementsByTagName("return_code");
-            orderResult.setReturn_code(msgTypeNode.item(0).getTextContent().trim());
-            NodeList returnMsgNode = root.getElementsByTagName("return_msg");
-            orderResult.setReturn_msg(returnMsgNode.item(0).getTextContent().trim());
-            NodeList appIdNode = root.getElementsByTagName("appid");
-            orderResult.setAppid(appIdNode.item(0).getTextContent().trim());
-            NodeList mchIdNode = root.getElementsByTagName("mch_id");
-            orderResult.setMch_id(mchIdNode.item(0).getTextContent().trim());
-            NodeList nonceNode = root.getElementsByTagName("nonce_str");
-            orderResult.setNonce_str(nonceNode.item(0).getTextContent().trim());
-            NodeList signNode = root.getElementsByTagName("sign");
-            orderResult.setSign(signNode.item(0).getTextContent().trim());
-            NodeList resultCodeNode = root.getElementsByTagName("result_code");
-            orderResult.setResult_code(resultCodeNode.item(0).getTextContent().trim());
-            NodeList prepayIdNode = root.getElementsByTagName("prepay_id");
-            orderResult.setPrepay_id(prepayIdNode.item(0).getTextContent().trim());
-            NodeList tradeTypeNode = root.getElementsByTagName("trade_type");
-            orderResult.setTrade_type(tradeTypeNode.item(0).getTextContent().trim());
-            NodeList errorCodeNode = root.getElementsByTagName("err_code");
-            orderResult.setErr_code(errorCodeNode.item(0).getTextContent().trim());
-            NodeList errorCodeResNode = root.getElementsByTagName("err_code_des");
-            orderResult.setErr_code_des(errorCodeResNode.item(0).getTextContent().trim());
-            NodeList codeUrlNode = root.getElementsByTagName("code_url");
-            orderResult.setCode_url(codeUrlNode.item(0).getTextContent().trim());
+            orderResult.setReturn_code(nodeValue("return_code", root));
+            orderResult.setReturn_msg(nodeValue("return_msg", root));
+            orderResult.setAppid(nodeValue("appid", root));
+            orderResult.setMch_id(nodeValue("mch_id", root));
+            orderResult.setNonce_str(nodeValue("nonce_str", root));
+            orderResult.setSign(nodeValue("sign", root));
+            orderResult.setResult_code(nodeValue("result_code", root));
+            orderResult.setPrepay_id(nodeValue("prepay_id", root));
+            orderResult.setTrade_type(nodeValue("trade_type", root));
+            orderResult.setErr_code(nodeValue("err_code", root));
+            orderResult.setErr_code_des(nodeValue("err_code_des", root));
+            orderResult.setCode_url(nodeValue("code_url", root));
             return orderResult;
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new RuntimeException("Failed to get prepay id due to IO exception.", e);
@@ -119,5 +111,13 @@ public class WXPayApi {
             throw new IllegalArgumentException("Reqiured argument 'openid' is missing when trade_type is 'JSAPI'.");
         if ("NATIVE".equals(parameters.get("trade_type")) && !parameters.containsKey("product_id"))
             throw new IllegalArgumentException("Reqiured argument 'product_id' is missing when trade_type is 'NATIVE'.");
+    }
+
+    private static String nodeValue(String nodeName, Element root) {
+        NodeList node = root.getElementsByTagName(nodeName);
+        if (node.getLength() == 1) {
+            return node.item(0).getTextContent().trim();
+        }
+        return null;
     }
 }
