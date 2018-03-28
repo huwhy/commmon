@@ -83,6 +83,7 @@ public class MpOrderApi {
                 request.append(String.format("<%s>%s</%s>", para.getKey(), para.getValue(), para.getKey()));
             }
             request.append("</xml>");
+            logger.debug("mp_order_api: {}", request);
             HttpPost httpPost = new HttpPost(API_URL);
 
             RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();
