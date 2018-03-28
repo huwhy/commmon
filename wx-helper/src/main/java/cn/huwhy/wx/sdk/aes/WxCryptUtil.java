@@ -130,8 +130,11 @@ public class WxCryptUtil {
 
     public static Command transform(MpConfig config, String signature, String timestamp, String nonce, String postXML) {
         try {
-            String ss = WXBizMsgCrypt.decryptMsg(config, signature, timestamp, nonce, postXML);
-            logger.info("decrypt msg : " + ss);
+            String ss = postXML;
+            if (config.getSecure()) {
+                ss = WXBizMsgCrypt.decryptMsg(config, signature, timestamp, nonce, postXML);
+                logger.info("decrypt msg : " + ss);
+            }
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             StringReader sr = new StringReader(ss);
