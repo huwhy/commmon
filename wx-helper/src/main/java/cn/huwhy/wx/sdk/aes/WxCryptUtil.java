@@ -2,11 +2,14 @@ package cn.huwhy.wx.sdk.aes;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -33,28 +36,35 @@ public class WxCryptUtil {
     /**
      * 微信公众号支付签名算法(详见:http://pay.weixin.qq.com/wiki/doc/api/index.php?chapter=4_3)
      *
-     * @param packageParams 原始参数
+     * @param data 原始参数
      * @param signKey       加密Key(即 商户Key)
      * @return 签名字符串
      */
-    public static String createSign(Map<String, String> packageParams, String signKey) {
-        SortedMap<String, String> sortedMap = new TreeMap<String, String>();
-        sortedMap.putAll(packageParams);
-
-        List<String> keys = new ArrayList<String>(sortedMap.keySet());
-        Collections.sort(keys);
-
-        StringBuilder toSign = new StringBuilder();
-        for (String key : keys) {
-            String value = sortedMap.get(key);
-            if (null != value && !"".equals(value) && !"sign".equals(key)
-                    && !"key".equals(key)) {
-                toSign.append(key).append("=").append(value).append("&");
+    public static String createSign(Map<String, String> data, String signKey) throws Exception {
+        Set<String> keySet = data.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+        for (String k : keyArray) {
+            if (k.equals("sign")) {
+                continue;
             }
+            String value = data.get(k);
+            if (value != null && value.trim().length() > 0) // 参数值为空，则不参与签名
+                sb.append(k).append("=").append(value.trim()).append("&");
         }
-        toSign.append("key=").append(signKey);
-        return DigestUtils.md5Hex(toSign.toString())
-                .toUpperCase();
+        sb.append("key=").append(signKey);
+        return MD5(sb.toString());
+    }
+
+    public static String MD5(String data) throws Exception {
+        java.security.MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] array = md.digest(data.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (byte item : array) {
+            sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
+        }
+        return sb.toString().toUpperCase();
     }
 
     public static WxPayResult transform(String xml) {
@@ -231,7 +241,7 @@ public class WxCryptUtil {
         }
     }
 
-    private static String nodeValue(String nodeName, Element root) {
+    public static String nodeValue(String nodeName, Element root) {
         NodeList node = root.getElementsByTagName(nodeName);
         if (node.getLength() == 1) {
             return node.item(0).getTextContent();

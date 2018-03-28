@@ -66,15 +66,15 @@ public class RedPacketApi {
             map.put("consume_mch_id", param.getConsumeMchId());
         }
 
-        String sign = WxCryptUtil.createSign(map, param.getPartnerKey());
-        map.put("sign", sign);
-        StringBuilder request = new StringBuilder("<xml>");
-        for (Map.Entry<String, String> para : map.entrySet()) {
-            request.append(String.format("<%s>%s</%s>", para.getKey(), para.getValue(), para.getKey()));
-        }
-        request.append("</xml>");
         WxRedpackResult result = new WxRedpackResult();
         try {
+            String sign = WxCryptUtil.createSign(map, param.getPartnerKey());
+            map.put("sign", sign);
+            StringBuilder request = new StringBuilder("<xml>");
+            for (Map.Entry<String, String> para : map.entrySet()) {
+                request.append(String.format("<%s>%s</%s>", para.getKey(), para.getValue(), para.getKey()));
+            }
+            request.append("</xml>");
             HttpClientUtil.setHttpClient(client);
 
             String text = HttpClientUtil.postXml(url, request.toString());
@@ -114,7 +114,7 @@ public class RedPacketApi {
             node = root.getElementsByTagName("total_amount");
             String total_amount = node.item(0).getTextContent().trim();
             result.setTotalAmount(Integer.valueOf(total_amount));
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        } catch (Exception e) {
             logger.error("", e);
             result.setResultCode("FAIL");
             result.setErrCodeDes(e.getMessage());
