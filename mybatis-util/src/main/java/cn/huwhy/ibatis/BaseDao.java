@@ -43,6 +43,20 @@ public interface BaseDao<T, PK extends Serializable> {
     int updates(@Param("list") Collection<T> pos);
 
     /**
+     * 删除
+     * @param id
+     * @return
+     */
+    int delete(PK id);
+
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
+    int deletes(@Param("ids") Collection<PK> ids);
+
+    /**
      * 根据主键获取
      *
      * @param id
