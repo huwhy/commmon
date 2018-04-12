@@ -8,85 +8,85 @@ public abstract class Term implements Serializable {
     /**
      * 分页数
      */
-    private Long                size     = 15L;
+    private long size = 15L;
     /**
      * 查询页
      */
-    private Long                page     = 1L;
+    private long page = 1L;
     /**
      * 总记录数
      */
-    private Long                total    = 0L;
+    private long total = 0L;
     /**
      * 返回总记录数
      */
-    private Boolean             hasTotal = true;
+    private boolean hasTotal = true;
     /**
      * 优化分页参数
      */
-    private Boolean             hasStart = false;
+    private boolean hasStart = false;
     /**
      * 排序
      */
-    private Map<String, Sort>   sorts    = new LinkedHashMap<>();
+    private Map<String, Sort> sorts = new LinkedHashMap<>();
     /**
      * 扩展参数
      */
-    private Map<String, Object> args     = new LinkedHashMap<>();
+    private Map<String, Object> args = new LinkedHashMap<>();
 
     public Map<String, Object> getArgs() {
         return args;
     }
 
-    public Long getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(Long size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
-    public Long getPage() {
+    public long getPage() {
         return page;
     }
 
-    public void setPage(Long page) {
+    public void setPage(long page) {
         this.page = page;
     }
 
-    public Long getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 
-    public Long getTotalPage() {
-        Long totalPage = getTotal() / getSize();
+    public long getTotalPage() {
+        long totalPage = getTotal() / getSize();
         if (getTotal() % this.getSize() > 0) {
             totalPage += 1;
         }
         return totalPage;
     }
 
-    public Boolean getHasTotal() {
+    public boolean getHasTotal() {
         return hasTotal;
     }
 
-    public void setHasTotal(Boolean hasTotal) {
+    public void setHasTotal(boolean hasTotal) {
         this.hasTotal = hasTotal;
     }
 
-    public Boolean getHasStart() {
+    public boolean getHasStart() {
         return hasStart;
     }
 
-    public void setHasStart(Boolean hasStart) {
+    public void setHasStart(boolean hasStart) {
         this.hasStart = hasStart;
     }
 
-    public Long getStart() {
+    public long getStart() {
         return (this.page - 1) * this.size;
     }
 

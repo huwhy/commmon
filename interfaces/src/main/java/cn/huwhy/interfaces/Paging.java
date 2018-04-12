@@ -32,19 +32,19 @@ public class Paging<T> implements Serializable {
         return paging;
     }
 
-    public Long getTotal() {
+    public long getTotal() {
         return term.getTotal();
     }
 
-    public Long getSize() {
+    public long getSize() {
         return term.getSize();
     }
 
-    public Long getPage() {
+    public long getPage() {
         return term.getPage();
     }
 
-    public Long getTotalPage() {
+    public long getTotalPage() {
         return term.getTotalPage();
     }
 
