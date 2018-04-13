@@ -2,18 +2,18 @@ package cn.huwhy.interfaces;
 
 import java.io.Serializable;
 
-public class Json implements Serializable {
+public class Json<T> implements Serializable {
 
-    public static Json SUCCESS() {
-        return new Json(200L);
+    public static <T> Json<T> SUCCESS() {
+        return new Json<>(200L);
     }
 
-    public static Json ERROR() {
-        return new Json(500L);
+    public static <T> Json<T> ERROR() {
+        return new Json<>(500L);
     }
 
-    public static <T> Json REDIRECT() {
-        return new Json(302L);
+    public static <T> Json<T> REDIRECT() {
+        return new Json<>(302L);
     }
 
     /**
@@ -31,7 +31,7 @@ public class Json implements Serializable {
     /**
      * 数据
      */
-    private Object data;
+    private T      data;
 
     public Json() {
     }
@@ -72,11 +72,11 @@ public class Json implements Serializable {
         return this;
     }
 
-    public <T> T getData() {
-        return (T) data;
+    public T getData() {
+        return data;
     }
 
-    public Json setData(Object data) {
+    public Json setData(T data) {
         this.data = data;
         return this;
     }
