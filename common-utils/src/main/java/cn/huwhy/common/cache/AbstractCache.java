@@ -51,7 +51,7 @@ public abstract class AbstractCache<T, PK> {
     }
 
     public String key(PK key) {
-        return "cache_" + tClass.getName() + "_" + keyFunc.apply(key);
+        return "cache:" + tClass.getName() + ":" + keyFunc.apply(key);
     }
 
     public T get(PK pk) {

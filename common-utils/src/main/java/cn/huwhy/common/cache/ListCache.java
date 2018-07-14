@@ -33,7 +33,7 @@ public abstract class ListCache<T, PK> extends AbstractCache<T, PK> {
     }
 
     public String key() {
-        return "list_cache_" + tClass.getName();
+        return "list_cache:" + tClass.getName();
     }
 
     public void destroy() {
