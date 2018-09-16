@@ -4,14 +4,13 @@
 
   <groupId>cn.huwhy.common</groupId>
   <artifactId>common</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.5</version>
   <modules>
     <module>interfaces</module>
     <module>mybatis-util</module>
     <module>wx-helper</module>
     <module>common-utils</module>
     <module>oss-utils</module>
-    <module>bee-rpc</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -27,7 +26,7 @@
     <httpclient.version>4.5</httpclient.version>
     <log4j.version>2.6.2</log4j.version>
   </properties>
-  
+
   <profiles>
     <profile>
       <id>dev</id>
@@ -37,7 +36,7 @@
       <repositories>
         <repository>
           <id>nexus</id>
-          <url>http://116.62.65.3:8081/nexus/content/groups/public/</url>
+          <url>http://118.126.112.187/:8081/nexus/content/groups/public/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -49,7 +48,7 @@
       <pluginRepositories>
         <pluginRepository>
           <id>nexus</id>
-          <url>http://116.62.65.3:8081/nexus/content/groups/public/</url>
+          <url>http://118.126.112.187/:8081/nexus/content/groups/public/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -107,12 +106,17 @@
       <dependency>
         <groupId>cn.huwhy.common</groupId>
         <artifactId>interfaces</artifactId>
-        <version>3.0.3</version>
+        <version>3.0.5</version>
       </dependency>
       <dependency>
         <groupId>cn.huwhy.common</groupId>
-        <artifactId>bee-rpc</artifactId>
-        <version>3.0.0</version>
+        <artifactId>common-utils</artifactId>
+        <version>3.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.huwhy.common</groupId>
+        <artifactId>mybatis-util</artifactId>
+        <version>3.0.5</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>

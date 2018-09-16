@@ -4,24 +4,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paging<T> implements Serializable {
+public class Paging<T, D extends Term> implements Serializable {
     public static Paging empty = new Paging<>();
 
     /**
      * 数据
      */
     private List<T> data;
-    private Term    term;
+    private D    term;
 
     public Paging() {
-        this.term = new Term() {};
     }
 
-    public Paging(Term term) {
+    public Paging(D term) {
         this.term = term;
     }
 
-    public Paging(Term term, List<T> data) {
+    public Paging(D term, List<T> data) {
         this.term = term;
         this.data = data;
     }
@@ -56,11 +55,11 @@ public class Paging<T> implements Serializable {
         this.data = data;
     }
 
-    public Term getTerm() {
+    public D getTerm() {
         return term;
     }
 
-    public void setTerm(Term term) {
+    public void setTerm(D term) {
         this.term = term;
     }
 }
